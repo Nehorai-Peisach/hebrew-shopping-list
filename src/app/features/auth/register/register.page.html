@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>רישום</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="register-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>צור חשבון</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <ion-item>
+            <ion-label position="stacked">אימייל</ion-label>
+            <ion-input type="email" formControlName="email" placeholder="הזן את האימייל שלך"> </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">סיסמה</ion-label>
+            <ion-input type="password" formControlName="password" placeholder="הזן את הסיסמה שלך"> </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">אישור סיסמה</ion-label>
+            <ion-input type="password" formControlName="confirmPassword" placeholder="אשר את הסיסמה שלך"> </ion-input>
+          </ion-item>
+
+          @if (registerForm.errors?.['passwordMismatch']) {
+          <ion-text color="danger">
+            <p class="ion-text-center">הסיסמאות לא תואמות</p>
+          </ion-text>
+          }
+
+          <div class="ion-margin-top">
+            <ion-button expand="block" type="submit" [disabled]="!registerForm.valid || loading()">
+              @if (loading()) {
+              <ion-spinner></ion-spinner>
+              } @else {
+              <span>הירשם</span>
+              }
+            </ion-button>
+          </div>
+
+          @if (error()) {
+          <ion-text color="danger" (click)="clearError()">
+            <p class="ion-text-center">{{ error() }}</p>
+          </ion-text>
+          }
+        </form>
+
+        <div class="ion-text-center ion-margin-top">
+          <ion-text>
+            <p>יש לך כבר חשבון? <a routerLink="/auth/login">התחבר</a></p>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

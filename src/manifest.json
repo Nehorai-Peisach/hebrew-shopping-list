@@ -1,0 +1,25 @@
+{
+  "name": "רשימת קניות",
+  "short_name": "רשימה",
+  "description": "אפליקציית רשימת קניות שיתופית עם סנכרון בזמן אמת",
+  "theme_color": "#3880ff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/icon/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

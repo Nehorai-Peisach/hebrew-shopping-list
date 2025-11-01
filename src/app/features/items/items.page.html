@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="חזור" (click)="goBackToLists()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>רשימת קניות</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [(ngModel)]="currentView" (ionChange)="onSegmentChange($event)">
+    <ion-segment-button value="all">
+      <ion-label>הכל</ion-label>
+      <ion-badge color="primary">{{ items().length }}</ion-badge>
+    </ion-segment-button>
+    <ion-segment-button value="unchecked">
+      <ion-label>לקנות</ion-label>
+      <ion-badge color="warning">{{ uncheckedItems().length }}</ion-badge>
+    </ion-segment-button>
+    <ion-segment-button value="checked">
+      <ion-label>בוצע</ion-label>
+      <ion-badge color="success">{{ checkedItems().length }}</ion-badge>
+    </ion-segment-button>
+    <ion-segment-button value="cart">
+      <ion-label>בעגלה</ion-label>
+      <ion-badge color="tertiary">{{ cartItems().length }}</ion-badge>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div class="ion-padding">
+    @if (loading()) {
+    <div>
+      <ion-spinner></ion-spinner>
+      <ion-text>טוען פריטים...</ion-text>
+    </div>
+    } @if (!loading() && filteredItems.length === 0) {
+    <div>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>אין פריטים</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          @if (currentView === 'all') {
+          <p>הוסף את הפריט הראשון שלך כדי להתחיל!</p>
+          } @if (currentView === 'unchecked') {
+          <p>כל הפריטים סומנו כבוצע!</p>
+          } @if (currentView === 'checked') {
+          <p>אף פריט לא סומן כבוצע עדיין.</p>
+          } @if (currentView === 'cart') {
+          <p>אין פריטים בעגלה עדיין.</p>
+          } @if (currentView === 'all') {
+          <ion-button expand="block" (click)="addItem()">
+            <ion-icon name="add" slot="start"></ion-icon>
+            הוסף פריט
+          </ion-button>
+          }
+        </ion-card-content>
+      </ion-card>
+    </div>
+    } @if (!loading() && filteredItems.length > 0) {
+    <ion-list>
+      @for (item of filteredItems; track item.id) {
+      <ion-item>
+        <ion-checkbox slot="start" [checked]="item.checked" (ionChange)="toggleItemChecked(item.id)"> </ion-checkbox>
+
+        <ion-label [class.item-checked]="item.checked" (click)="editItem(item)">
+          <h2>{{ item.name }}</h2>
+          <p>כמות: {{ item.qty }}</p>
+          <p>{{ item.createdAt | date:'short' }}</p>
+        </ion-label>
+
+        <ion-badge [color]="item.inCart ? 'tertiary' : 'light'" slot="end" (click)="toggleItemInCart(item.id)">
+          <ion-icon name="cart"></ion-icon>
+        </ion-badge>
+
+        <ion-button fill="clear" color="primary" slot="end" (click)="editItem(item)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="clear" color="danger" slot="end" (click)="deleteItem(item.id, item.name, $event)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-item>
+      }
+    </ion-list>
+    } @if (error()) {
+    <ion-text color="danger">
+      <p class="ion-text-center">{{ error() }}</p>
+    </ion-text>
+    }
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addItem()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<style>
+  .item-checked {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+</style>

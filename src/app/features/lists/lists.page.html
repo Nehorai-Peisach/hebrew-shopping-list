@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="חזור" (click)="goBackToGroups()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ selectedGroup()?.name || 'רשימות' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (loading()) {
+  <div>
+    <ion-spinner></ion-spinner>
+    <ion-text>טוען רשימות...</ion-text>
+  </div>
+  } @if (!loading() && lists().length === 0) {
+  <div>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>אין רשימות עדיין</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>צור את רשימת הקניות הראשונה שלך כדי להתחיל!</p>
+        <ion-button expand="block" (click)="createList()">
+          <ion-icon name="add" slot="start"></ion-icon>
+          צור רשימה
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  } @if (!loading() && lists().length > 0) {
+  <ion-list>
+    @for (listItem of lists(); track listItem.id) {
+    <ion-item button (click)="openList(listItem.id)">
+      <ion-icon name="list" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ listItem.name }}</h2>
+        <p>נוצר על ידי: {{ listItem.createdBy }}</p>
+        <p>{{ listItem.createdAt | date:'short' }}</p>
+      </ion-label>
+      @if (listItem.itemCount) {
+      <ion-badge color="primary">{{ listItem.itemCount }} פריטים</ion-badge>
+      }
+      <ion-button fill="clear" color="danger" slot="end" (click)="deleteList(listItem.id, listItem.name, $event)">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+    }
+  </ion-list>
+  } @if (error()) {
+  <ion-text color="danger">
+    <p class="ion-text-center">{{ error() }}</p>
+  </ion-text>
+  }
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="createList()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

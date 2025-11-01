@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users must be authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user is member of a group
+    function isMemberOfGroup(groupId) {
+      return isAuthenticated() && 
+             request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.members;
+    }
+    
+    // Groups collection rules
+    match /groups/{groupId} {
+      // Allow read/write if user is a member of the group
+      allow read, write: if isMemberOfGroup(groupId);
+      
+      // Allow create if user is authenticated (they become the creator)
+      allow create: if isAuthenticated() && 
+                   request.auth.uid == resource.data.createdBy &&
+                   request.auth.uid in resource.data.members;
+    }
+    
+    // Lists collection rules
+    match /lists/{listId} {
+      // Allow read/write if user is member of the list's group
+      allow read, write: if isAuthenticated() && 
+                        isMemberOfGroup(resource.data.groupId);
+      
+      // Allow create if user is authenticated and member of the group
+      allow create: if isAuthenticated() && 
+                   request.auth.uid == resource.data.createdBy &&
+                   isMemberOfGroup(resource.data.groupId);
+    }
+    
+    // Items collection rules
+    match /items/{itemId} {
+      // Allow read/write if user is member of the list's group
+      allow read, write: if isAuthenticated() && 
+                        exists(/databases/$(database)/documents/lists/$(resource.data.listId)) &&
+                        isMemberOfGroup(get(/databases/$(database)/documents/lists/$(resource.data.listId)).data.groupId);
+      
+      // Allow create if user is authenticated and member of the group
+      allow create: if isAuthenticated() && 
+                   request.auth.uid == resource.data.createdBy &&
+                   exists(/databases/$(database)/documents/lists/$(resource.data.listId)) &&
+                   isMemberOfGroup(get(/databases/$(database)/documents/lists/$(resource.data.listId)).data.groupId);
+    }
+  }
+}

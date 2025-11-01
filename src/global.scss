@@ -10,20 +10,20 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+@import '@ionic/angular/css/core.css';
 
 /* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
 
 /**
  * Ionic Dark Mode
@@ -35,3 +35,460 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/**
+ * RTL Support for Hebrew
+ * -----------------------------------------------------
+ */
+
+/* Force RTL direction globally */
+html {
+  direction: rtl;
+}
+
+body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Ensure all text is right-aligned by default */
+* {
+  text-align: right;
+}
+
+/* Global RTL styles */
+html[dir='rtl'] {
+  /* Fix Ionic fab button position */
+  ion-fab[horizontal='end'] {
+    left: 16px;
+    right: unset;
+  }
+
+  ion-fab[horizontal='start'] {
+    right: 16px;
+    left: unset;
+  }
+
+  /* Fix back button position and appearance for RTL */
+  ion-back-button {
+    /* Remove the flip transform and use proper RTL positioning */
+    transform: none;
+    /* Ensure it appears on the right side for RTL */
+    order: 1;
+  }
+
+  /* Fix back button icon to point in the correct direction for RTL */
+  ion-back-button ion-icon {
+    transform: scaleX(-1);
+  }
+
+  /* Ensure proper placement in toolbar */
+  ion-toolbar ion-buttons[slot='start'] {
+    order: 1;
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  /* Fix checkbox alignment */
+  ion-checkbox {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+
+  /* Fix badge position */
+  ion-badge[slot='end'] {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+
+  /* Fix button positions */
+  ion-button[slot='end'] {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+
+  /* Fix icon positions */
+  ion-icon[slot='start'] {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+
+  ion-icon[slot='end'] {
+    margin-left: 0;
+    margin-right: 8px;
+  }
+
+  /* Fix toolbar buttons */
+  ion-toolbar ion-button {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+
+  /* Fix item content alignment */
+  ion-item {
+    text-align: right;
+    --padding-start: 16px;
+    --padding-end: 16px;
+  }
+
+  ion-label {
+    text-align: right;
+  }
+
+  /* Fix card content */
+  ion-card-content {
+    text-align: right;
+  }
+
+  ion-card-title {
+    text-align: right;
+  }
+
+  /* Fix list alignment */
+  ion-list {
+    text-align: right;
+  }
+
+  /* Fix input fields */
+  ion-input,
+  ion-textarea {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* Fix segment buttons */
+  ion-segment-button {
+    text-align: center;
+  }
+
+  /* Fix alert dialogs */
+  .alert-wrapper {
+    text-align: right;
+    direction: rtl;
+  }
+
+  .alert-input {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* Fix action sheet */
+  .action-sheet-wrapper {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* Fix toast messages */
+  .toast-wrapper {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* Fix spinner container */
+  .loading-container,
+  .error-container {
+    text-align: center;
+    direction: rtl;
+  }
+
+  /* Fix form controls */
+  ion-item ion-label[position='stacked'] {
+    text-align: right;
+  }
+
+  /* Fix button content */
+  ion-button span {
+    direction: rtl;
+  }
+
+  /* Fix navigation */
+  ion-nav,
+  ion-router-outlet {
+    direction: rtl;
+  }
+
+  /* Fix content padding */
+  ion-content {
+    --padding-start: 16px;
+    --padding-end: 16px;
+  }
+
+  /* Fix menu alignment */
+  ion-menu-button {
+    margin-left: 8px;
+    margin-right: 0;
+  }
+
+  /* Fix popover alignment */
+  .popover-wrapper {
+    text-align: right;
+    direction: rtl;
+  }
+}
+
+/* Apply RTL to specific components that might need it */
+ion-app {
+  direction: rtl;
+}
+
+ion-router-outlet {
+  direction: rtl;
+}
+
+/* Custom styles for better Hebrew support */
+.hebrew-text {
+  font-family: 'Segoe UI', 'Arial', 'David', 'Times New Roman', serif;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Loading container center alignment */
+.loading-container,
+.error-container {
+  text-align: center;
+  direction: rtl;
+}
+
+/* Better spacing for RTL */
+html[dir='rtl'] ion-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+html[dir='rtl'] ion-card-content {
+  text-align: right;
+}
+
+/* Ensure all text inputs work properly with RTL */
+ion-input,
+ion-textarea,
+.native-input {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Fix placeholder text alignment */
+ion-input::placeholder,
+ion-textarea::placeholder {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Fix specific input types */
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'] {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Fix form validation messages */
+.item-has-error .item-inner {
+  text-align: right;
+}
+
+/* Fix select options */
+ion-select-option {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Fix datetime picker */
+ion-datetime {
+  text-align: right;
+}
+
+/* Fix searchbar */
+ion-searchbar {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Fix all modal content */
+.modal-wrapper {
+  direction: rtl;
+}
+
+.modal-wrapper .ion-page {
+  direction: rtl;
+}
+
+/* Fix toggle and radio buttons */
+ion-toggle,
+ion-radio {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+/* Fix range slider */
+ion-range {
+  direction: rtl;
+}
+
+/* Fix progress bar */
+ion-progress-bar {
+  direction: rtl;
+}
+
+/* Fix tabs */
+ion-tab-bar {
+  direction: rtl;
+}
+
+ion-tab-button {
+  text-align: center;
+}
+
+/* Fix sliding items */
+ion-item-sliding {
+  direction: rtl;
+}
+
+/* Fix virtual scroll */
+ion-virtual-scroll {
+  direction: rtl;
+}
+
+/* Fix grid system */
+ion-grid,
+ion-row,
+ion-col {
+  direction: rtl;
+}
+
+/* Override any LTR styles that might interfere */
+[dir='ltr'] {
+  direction: rtl !important;
+}
+
+/* Ensure consistent spacing */
+.ion-padding-start {
+  padding-right: var(--ion-padding, 16px) !important;
+  padding-left: 0 !important;
+}
+
+.ion-padding-end {
+  padding-left: var(--ion-padding, 16px) !important;
+  padding-right: 0 !important;
+}
+
+.ion-margin-start {
+  margin-right: var(--ion-margin, 16px) !important;
+  margin-left: 0 !important;
+}
+
+.ion-margin-end {
+  margin-left: var(--ion-margin, 16px) !important;
+  margin-right: 0 !important;
+}
+
+/* Additional RTL fixes for specific Ionic components */
+/* Fix for alerts */
+.alert-wrapper {
+  direction: rtl !important;
+}
+
+.alert-head {
+  text-align: right !important;
+}
+
+.alert-message {
+  text-align: right !important;
+}
+
+.alert-input {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Fix for action sheets */
+.action-sheet-wrapper {
+  direction: rtl !important;
+}
+
+.action-sheet-title {
+  text-align: right !important;
+}
+
+.action-sheet-button-inner {
+  text-align: right !important;
+}
+
+/* Fix for toasts */
+.toast-wrapper {
+  direction: rtl !important;
+}
+
+.toast-content {
+  text-align: right !important;
+}
+
+/* Fix for loading overlay */
+.loading-wrapper {
+  direction: rtl !important;
+  text-align: center !important;
+}
+
+/* Fix for picker */
+.picker-wrapper {
+  direction: rtl !important;
+}
+
+/* Force RTL for all text content */
+* {
+  direction: inherit;
+}
+
+/* Ensure Hebrew fonts are used */
+html,
+body,
+ion-app {
+  font-family: 'Segoe UI', 'Arial', 'David', 'Narkisim', 'Times New Roman', serif !important;
+}
+
+/* Fix any remaining LTR elements */
+.ion-text-start {
+  text-align: right !important;
+}
+
+.ion-text-end {
+  text-align: left !important;
+}
+
+/* Fix floating labels */
+.item-label-stacked ion-label,
+.item-label-floating ion-label {
+  text-align: right !important;
+  transform-origin: right top !important;
+}
+
+/* Additional back button fixes */
+ion-back-button .button-native {
+  padding-left: 0 !important;
+  padding-right: 8px !important;
+}
+
+/* Fix back button text if present */
+ion-back-button .button-text {
+  padding-left: 0 !important;
+  padding-right: 4px !important;
+}
+
+/* Ensure back button is properly positioned in header */
+ion-header ion-toolbar ion-buttons[slot='start'] {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Fix for navigation stack */
+.ion-page {
+  direction: rtl;
+}
+
+/* Ensure proper RTL behavior for page transitions */
+ion-nav,
+ion-router-outlet {
+  direction: rtl;
+}

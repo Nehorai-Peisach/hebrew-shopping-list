@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>התחברות</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>ברוכים השבים</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <ion-item>
+            <ion-label position="stacked">אימייל</ion-label>
+            <ion-input type="email" formControlName="email" placeholder="הזן את האימייל שלך"> </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">סיסמה</ion-label>
+            <ion-input type="password" formControlName="password" placeholder="הזן את הסיסמה שלך"> </ion-input>
+          </ion-item>
+
+          <div class="ion-margin-top">
+            <ion-button expand="block" type="submit" [disabled]="!loginForm.valid || loading()">
+              @if (loading()) {
+              <ion-spinner></ion-spinner>
+              } @else {
+              <span>התחבר</span>
+              }
+            </ion-button>
+          </div>
+
+          @if (error()) {
+          <ion-text color="danger" (click)="clearError()">
+            <p class="ion-text-center">{{ error() }}</p>
+          </ion-text>
+          }
+        </form>
+
+        <div class="ion-text-center ion-margin-top">
+          <ion-text>
+            <p>אין לך חשבון? <a routerLink="/auth/register">הירשם</a></p>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

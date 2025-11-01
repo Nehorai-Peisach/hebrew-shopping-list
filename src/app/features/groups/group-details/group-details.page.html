@@ -1,0 +1,111 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="חזור" defaultHref="/groups"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Group Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="loading()" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <ion-text>Loading group details...</ion-text>
+  </div>
+
+  <div *ngIf="!loading() && group()">
+    <!-- Group Info Card -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="people"></ion-icon>
+          {{ group()?.name }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label>
+            <p><strong>Group ID:</strong> {{ group()?.id }}</p>
+            <p><strong>Created:</strong> {{ group()?.createdAt | date:'medium' }}</p>
+            <p><strong>Members:</strong> {{ group()?.members.length }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Members List -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Members</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let memberId of group()?.members">
+            <ion-icon name="person" slot="start"></ion-icon>
+            <ion-label>
+              <h3>{{ memberId }}</h3>
+              <p *ngIf="group()?.createdBy === memberId">Group Creator</p>
+            </ion-label>
+            <ion-chip *ngIf="user()?.uid === memberId" color="primary" slot="end"> You </ion-chip>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Actions Card -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Actions</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button expand="block" fill="outline" (click)="inviteMembers()">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Invite Members
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" color="medium" (click)="shareGroupId()">
+          <ion-icon name="share" slot="start"></ion-icon>
+          Share Group ID
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" color="danger" (click)="leaveGroup()">
+          <ion-icon name="exit" slot="start"></ion-icon>
+          Leave Group
+        </ion-button>
+
+        <ion-button *ngIf="isGroupCreator()" expand="block" fill="outline" color="danger" (click)="deleteGroup()">
+          <ion-icon name="trash" slot="start"></ion-icon>
+          Delete Group
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="!loading() && !group()" class="error-container">
+    <ion-text color="danger">
+      <h2>Group not found</h2>
+      <p>The group you're looking for doesn't exist or you don't have access to it.</p>
+    </ion-text>
+  </div>
+</ion-content>
+
+<style>
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    gap: 1rem;
+  }
+
+  .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    padding: 2rem;
+    text-align: center;
+  }
+</style>

@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>הקבוצות שלי</ion-title>
+    <ion-button slot="end" fill="clear" (click)="signOut()">
+      <ion-icon name="exit"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (loading()) {
+  <div>
+    <ion-spinner></ion-spinner>
+    <ion-text>טוען קבוצות...</ion-text>
+  </div>
+  } @if (!loading() && groups().length === 0) {
+  <div>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>ברוכים הבאים!</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>אתם עדיין לא חברים באף קבוצה. צרו קבוצה חדשה או הצטרפו לקבוצה קיימת כדי להתחיל!</p>
+        <ion-button expand="block" (click)="createGroup()">
+          <ion-icon name="add" slot="start"></ion-icon>
+          צור קבוצה
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="joinGroup()">
+          <ion-icon name="people" slot="start"></ion-icon>
+          הצטרף לקבוצה
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  } @if (!loading() && groups().length > 0) {
+  <ion-list>
+    @for (group of groups(); track group.id) {
+    <ion-item>
+      <ion-icon name="people" slot="start"></ion-icon>
+      <ion-label (click)="selectGroup(group.id)" class="clickable">
+        <h2>{{ group.name }}</h2>
+        <p>{{ group.members.length }} חברים</p>
+        <p>מזהה: {{ group.id }}</p>
+      </ion-label>
+      <ion-button fill="clear" color="primary" slot="end" (click)="viewGroupDetails(group.id)">
+        <ion-icon name="settings"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" color="danger" slot="end" (click)="leaveGroup(group.id, group.name, $event)">
+        <ion-icon name="exit"></ion-icon>
+      </ion-button>
+    </ion-item>
+    }
+  </ion-list>
+  } @if (error()) {
+  <ion-text color="danger">
+    <p class="ion-text-center">{{ error() }}</p>
+  </ion-text>
+  }
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="createGroup()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<style>
+  .clickable {
+    cursor: pointer;
+  }
+</style>
