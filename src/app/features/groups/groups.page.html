@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>הקבוצות שלי</ion-title>
-    <ion-button slot="end" fill="clear" (click)="signOut()">
+    <ion-button slot="end" fill="clear" (click)="signOut()" class="logout-btn">
       <ion-icon name="exit"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -9,63 +9,91 @@
 
 <ion-content class="ion-padding">
   @if (loading()) {
-  <div>
+  <div class="empty-state">
     <ion-spinner></ion-spinner>
     <ion-text>טוען קבוצות...</ion-text>
   </div>
-  } @if (!loading() && groups().length === 0) {
-  <div>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>ברוכים הבאים!</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>אתם עדיין לא חברים באף קבוצה. צרו קבוצה חדשה או הצטרפו לקבוצה קיימת כדי להתחיל!</p>
-        <ion-button expand="block" (click)="createGroup()">
-          <ion-icon name="add" slot="start"></ion-icon>
-          צור קבוצה
-        </ion-button>
-        <ion-button expand="block" fill="outline" (click)="joinGroup()">
-          <ion-icon name="people" slot="start"></ion-icon>
-          הצטרף לקבוצה
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
-  </div>
-  } @if (!loading() && groups().length > 0) {
-  <ion-list>
-    @for (group of groups(); track group.id) {
-    <ion-item>
-      <ion-icon name="people" slot="start"></ion-icon>
-      <ion-label (click)="selectGroup(group.id)" class="clickable">
-        <h2>{{ group.name }}</h2>
-        <p>{{ group.members.length }} חברים</p>
-        <p>מזהה: {{ group.id }}</p>
-      </ion-label>
-      <ion-button fill="clear" color="primary" slot="end" (click)="viewGroupDetails(group.id)">
-        <ion-icon name="settings"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" color="danger" slot="end" (click)="leaveGroup(group.id, group.name, $event)">
-        <ion-icon name="exit"></ion-icon>
-      </ion-button>
-    </ion-item>
-    }
-  </ion-list>
-  } @if (error()) {
-  <ion-text color="danger">
-    <p class="ion-text-center">{{ error() }}</p>
-  </ion-text>
   }
 
+  @if (!loading() && groups().length === 0) {
+  <div class="empty-state">
+    <ion-icon name="people" class="empty-icon"></ion-icon>
+    <h2>ברוכים הבאים!</h2>
+    <p>אתם עדיין לא חברים באף קבוצה.</p>
+    <p>צרו קבוצה חדשה או הצטרפו לקבוצה קיימת כדי להתחיל!</p>
+    <div class="empty-actions">
+      <ion-button expand="block" (click)="createGroup()" class="action-button primary-btn">
+        <ion-icon name="add-circle" slot="start"></ion-icon>
+        צור קבוצה
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="joinGroup()" class="action-button outline-btn">
+        <ion-icon name="person-add" slot="start"></ion-icon>
+        הצטרף לקבוצה
+      </ion-button>
+    </div>
+  </div>
+  }
+
+  @if (!loading() && groups().length > 0) {
+  <div class="groups-container">
+    <!-- Header Section -->
+    <div class="section-header">
+      <h2>הקבוצות שלך</h2>
+      <ion-badge color="primary">{{ groups().length }}</ion-badge>
+    </div>
+
+    <!-- Groups Grid -->
+    <div class="groups-grid">
+      @for (group of groups(); track group.id) {
+      <ion-card class="group-card" (click)="selectGroup(group.id)">
+        <div class="group-header">
+          <ion-icon name="people" class="group-icon"></ion-icon>
+          <div class="group-actions">
+            <ion-button fill="clear" size="small" color="primary" (click)="viewGroupDetails(group.id, $event)">
+              <ion-icon name="settings-sharp"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" (click)="leaveGroup(group.id, group.name, $event)">
+              <ion-icon name="exit"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+        <ion-card-content>
+          <h3 class="group-name">{{ group.name }}</h3>
+          <div class="group-info">
+            <ion-icon name="people"></ion-icon>
+            <span>{{ group.members.length }} חברים</span>
+          </div>
+          <div class="group-id">
+            <small>מזהה: {{ group.id }}</small>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      }
+    </div>
+  </div>
+  }
+
+  @if (error()) {
+  <div class="error-banner">
+    <ion-icon name="alert-circle"></ion-icon>
+    <ion-text color="danger">
+      <p>{{ error() }}</p>
+    </ion-text>
+    <ion-button fill="clear" size="small" (click)="clearError()">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
+  </div>
+  }
+
+  <!-- FAB for quick actions -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="createGroup()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="joinGroup()" color="secondary">
+        <ion-icon name="person-add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
   </ion-fab>
 </ion-content>
-
-<style>
-  .clickable {
-    cursor: pointer;
-  }
-</style>

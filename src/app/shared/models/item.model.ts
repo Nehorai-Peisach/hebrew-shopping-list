@@ -6,6 +6,7 @@ export interface Item {
   inCart: boolean;
   listId: string;
   createdBy: string;
+  imageUrl?: string;
   updatedAt: Date;
   createdAt: Date;
 }
@@ -15,6 +16,7 @@ export interface CreateItemData {
   qty: number;
   listId: string;
   createdBy: string;
+  imageUrl?: string;
 }
 
 export interface UpdateItemData {
@@ -22,4 +24,5 @@ export interface UpdateItemData {
   qty?: number;
   checked?: boolean;
   inCart?: boolean;
+  imageUrl?: string;
 }

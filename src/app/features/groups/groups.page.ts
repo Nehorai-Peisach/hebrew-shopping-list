@@ -9,17 +9,14 @@ import {
   IonToolbar,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonItem,
-  IonLabel,
   IonButton,
   IonText,
   IonSpinner,
-  IonList,
   IonIcon,
   IonFab,
   IonFabButton,
+  IonFabList,
+  IonBadge,
   AlertController,
   ToastController,
 } from '@ionic/angular/standalone';
@@ -31,27 +28,25 @@ import { GroupsStore } from '../../stores/groups.store';
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.page.html',
+  styleUrls: ['./groups.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     IonCard,
     IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonItem,
-    IonLabel,
     IonButton,
     IonText,
     IonSpinner,
-    IonList,
     IonIcon,
     IonFab,
     IonFabButton,
-    FormsModule,
+    IonFabList,
+    IonBadge,
   ],
 })
 export class GroupsPage implements OnInit {
@@ -180,7 +175,8 @@ export class GroupsPage implements OnInit {
     this.router.navigate(['/lists']);
   }
 
-  viewGroupDetails(groupId: string) {
+  viewGroupDetails(groupId: string, event: Event) {
+    event.stopPropagation();
     this.router.navigate(['/groups', groupId]);
   }
 
@@ -231,6 +227,10 @@ export class GroupsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  clearError() {
+    this.groupsStore.clearError();
   }
 
   private async showToast(message: string, color: string = 'success') {

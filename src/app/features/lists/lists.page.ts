@@ -8,14 +8,9 @@ import {
   IonToolbar,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonItem,
-  IonLabel,
   IonButton,
   IonText,
   IonSpinner,
-  IonList,
   IonIcon,
   IonFab,
   IonFabButton,
@@ -33,6 +28,7 @@ import { ListsStore } from '../../stores/lists.store';
 @Component({
   selector: 'app-lists',
   templateUrl: './lists.page.html',
+  styleUrls: ['./lists.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -43,14 +39,9 @@ import { ListsStore } from '../../stores/lists.store';
     IonToolbar,
     IonCard,
     IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonItem,
-    IonLabel,
     IonButton,
     IonText,
     IonSpinner,
-    IonList,
     IonIcon,
     IonFab,
     IonFabButton,
@@ -131,7 +122,7 @@ export class ListsPage implements OnInit {
   }
 
   openList(listId: string) {
-    this.router.navigate(['/items', listId]);
+    this.router.navigate(['/items', listId], { replaceUrl: true });
   }
 
   async deleteList(listId: string, listName: string, event: Event) {
@@ -164,6 +155,10 @@ export class ListsPage implements OnInit {
 
   goBackToGroups() {
     this.router.navigate(['/groups']);
+  }
+
+  clearError() {
+    this.listsStore.clearError();
   }
 
   private async showToast(message: string, color: string = 'success') {

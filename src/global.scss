@@ -1,12 +1,7 @@
 /*
- * App Global CSS
+ * App Global CSS - Modern Design System
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * Modern design improvements with smooth animations and enhanced visuals
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -25,23 +20,302 @@
 @import '@ionic/angular/css/text-transformation.css';
 @import '@ionic/angular/css/flex-utils.css';
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+/* Dark Mode Support */
 @import '@ionic/angular/css/palettes/dark.system.css';
 
 /**
- * RTL Support for Hebrew
- * -----------------------------------------------------
+ * Modern Design Enhancements
  */
 
-/* Force RTL direction globally */
+/* Typography */
+body,
+html {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+/* Card styling - modern approach */
+ion-card {
+  border-radius: var(--ion-card-border-radius);
+  box-shadow: var(--shadow-md);
+  border: none;
+  transition: all var(--transition-base);
+
+  &:active,
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+}
+
+ion-card-header {
+  padding: var(--space-xl);
+}
+
+ion-card-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: 0;
+}
+
+ion-card-content {
+  padding: var(--space-lg);
+  font-size: var(--font-size-base);
+}
+
+/* Button enhancements */
+ion-button {
+  border-radius: var(--ion-button-border-radius);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all var(--transition-base);
+  text-transform: none;
+
+  &[expand='block'] {
+    height: 44px;
+    font-size: var(--font-size-base);
+  }
+
+  &.ion-focused {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+}
+
+ion-button[fill='outline'] {
+  border: 2px solid;
+  
+  &:hover,
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+/* Input fields */
+ion-item {
+  border-radius: 8px;
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-base);
+  
+  &.ion-touched.ng-invalid {
+    border-bottom: 2px solid var(--ion-color-danger);
+  }
+}
+
+ion-input,
+ion-textarea {
+  border-radius: 8px;
+  padding: var(--space-md);
+  font-size: var(--font-size-base);
+  transition: border-color var(--transition-fast);
+
+  &:focus {
+    border-color: var(--ion-color-primary);
+  }
+}
+
+ion-label {
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-sm);
+  color: var(--ion-text-color);
+}
+
+/* Spinner styling */
+ion-spinner {
+  --color: var(--ion-color-primary);
+}
+
+/* Loading and empty states */
+.loading-container,
+.error-container,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: var(--space-2xl);
+  text-align: center;
+
+  ion-text {
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    margin-top: var(--space-lg);
+  }
+
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Toolbar styling */
+ion-toolbar {
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  --border-color: transparent;
+  box-shadow: var(--shadow-md);
+
+  ion-title {
+    font-weight: 600;
+    font-size: var(--font-size-xl);
+    color: white;
+  }
+
+  ion-button {
+    --color: white;
+  }
+
+  ion-icon {
+    color: white;
+  }
+}
+
+/* Badge styling */
+ion-badge {
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-weight: 600;
+  font-size: var(--font-size-xs);
+  transition: all var(--transition-fast);
+}
+
+/* List items */
+ion-list {
+  --ion-background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+ion-item {
+  --padding-start: var(--space-lg);
+  --padding-end: var(--space-lg);
+  --inner-padding-start: var(--space-lg);
+  --inner-padding-end: var(--space-lg);
+  --border-color: transparent;
+  transition: all var(--transition-fast);
+
+  &:active,
+  &:hover {
+    background-color: var(--ion-color-light);
+  }
+}
+
+/* Checkbox styling */
+ion-checkbox {
+  --size: 20px;
+  --border-radius: 6px;
+  transition: all var(--transition-fast);
+}
+
+/* FAB Button */
+ion-fab-button {
+  --box-shadow: var(--shadow-lg);
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  transition: all var(--transition-base);
+
+  &:hover,
+  &:active {
+    --box-shadow: var(--shadow-xl);
+    transform: scale(1.05);
+  }
+}
+
+/* Segment buttons */
+ion-segment {
+  --background: transparent;
+  background: var(--ion-color-light);
+  border-radius: 12px;
+  padding: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+ion-segment-button {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all var(--transition-base);
+
+  &.segment-button-checked {
+    --color-checked: white;
+    background: var(--ion-color-primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* Content area */
+ion-content {
+  --background: var(--ion-background-color);
+  --padding-top: var(--space-lg);
+  --padding-bottom: var(--space-lg);
+  --padding-start: var(--space-lg);
+  --padding-end: var(--space-lg);
+}
+
+/* Header */
+ion-header {
+  box-shadow: var(--shadow-md);
+}
+
+/* Text styling */
+ion-text {
+  color: var(--ion-text-color);
+
+  &.ion-text-center {
+    text-align: center;
+  }
+
+  p {
+    margin: var(--space-sm) 0;
+    color: var(--ion-text-color);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+ion-page {
+  animation: fadeIn var(--transition-base);
+}
+
+/* Transitions for page entering */
+.ion-page-enter {
+  animation: slideInRight var(--transition-slow);
+}
+
+/**
+ * RTL Support for Hebrew
+ * ================================================
+ */
+
 html {
   direction: rtl;
 }
@@ -51,10 +325,168 @@ body {
   text-align: right;
 }
 
-/* Ensure all text is right-aligned by default */
 * {
   text-align: right;
 }
+
+html[dir='rtl'] {
+  /* Fab buttons */
+  ion-fab[horizontal='end'] {
+    left: var(--space-lg);
+    right: unset;
+  }
+
+  ion-fab[horizontal='start'] {
+    right: var(--space-lg);
+    left: unset;
+  }
+
+  /* Back button */
+  ion-back-button {
+    transform: none;
+    order: 1;
+  }
+
+  ion-back-button ion-icon {
+    transform: scaleX(-1);
+  }
+
+  ion-toolbar ion-buttons[slot='start'] {
+    order: 1;
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  /* Item alignment */
+  ion-item {
+    text-align: right;
+    --padding-start: var(--space-lg);
+    --padding-end: var(--space-lg);
+  }
+
+  ion-label {
+    text-align: right;
+  }
+
+  /* Icon positions */
+  ion-icon[slot='start'] {
+    margin-right: 0;
+    margin-left: var(--space-md);
+  }
+
+  ion-icon[slot='end'] {
+    margin-left: 0;
+    margin-right: var(--space-md);
+  }
+
+  /* Checkbox alignment */
+  ion-checkbox {
+    margin-left: var(--space-md);
+    margin-right: 0;
+  }
+
+  /* Badge position */
+  ion-badge[slot='end'] {
+    margin-left: var(--space-md);
+    margin-right: 0;
+  }
+
+  /* Button positions */
+  ion-button[slot='end'] {
+    margin-left: var(--space-md);
+    margin-right: 0;
+  }
+
+  /* Card content */
+  ion-card-content,
+  ion-card-header {
+    text-align: right;
+  }
+
+  /* Input fields */
+  ion-input,
+  ion-textarea {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* Toolbar buttons */
+  ion-toolbar ion-button {
+    margin-left: var(--space-md);
+    margin-right: 0;
+  }
+
+  /* Content padding */
+  ion-content {
+    --padding-start: var(--space-lg);
+    --padding-end: var(--space-lg);
+  }
+
+  /* Form labels */
+  ion-item ion-label[position='stacked'] {
+    text-align: right;
+  }
+
+  /* Modal and overlay content */
+  .alert-wrapper,
+  .action-sheet-wrapper,
+  .toast-wrapper,
+  .modal-wrapper {
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* Menu button */
+  ion-menu-button {
+    margin-left: var(--space-md);
+    margin-right: 0;
+  }
+
+  /* Grid and flex */
+  ion-grid,
+  ion-row,
+  ion-col {
+    direction: rtl;
+  }
+}
+
+/* Ensure Hebrew fonts are used */
+html,
+body,
+ion-app {
+  font-family: 'Segoe UI', 'Roboto', 'Noto Sans Hebrew', 'Arial', 'David', sans-serif;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  ion-card {
+    border-radius: 12px;
+  }
+
+  ion-toolbar {
+    --height: 56px;
+  }
+
+  ion-button[expand='block'] {
+    height: 40px;
+    font-size: var(--font-size-sm);
+  }
+
+  ion-content {
+    --padding-top: var(--space-md);
+    --padding-bottom: var(--space-md);
+  }
+}
+
+@media (min-width: 577px) {
+  ion-content {
+    --padding-top: var(--space-xl);
+    --padding-bottom: var(--space-xl);
+  }
+}
+
+
+
 
 /* Global RTL styles */
 html[dir='rtl'] {

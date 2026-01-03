@@ -5,47 +5,91 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="login-container">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>ברוכים השבים</ion-card-title>
-      </ion-card-header>
+  <div class="auth-container">
+    <!-- Header Section -->
+    <div class="auth-header">
+      <ion-icon name="bag-check" class="app-icon"></ion-icon>
+      <h1>רשימת קניות</h1>
+      <p>כנס לחשבון שלך כדי להתחיל</p>
+    </div>
 
+    <!-- Login Form -->
+    <ion-card class="auth-card">
       <ion-card-content>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <ion-item>
-            <ion-label position="stacked">אימייל</ion-label>
-            <ion-input type="email" formControlName="email" placeholder="הזן את האימייל שלך"> </ion-input>
-          </ion-item>
+          <!-- Email Input -->
+          <div class="form-group">
+            <ion-item>
+              <ion-label position="stacked">אימייל</ion-label>
+              <ion-input 
+                type="email" 
+                formControlName="email" 
+                placeholder="הזן את האימייל שלך"
+                clearInput>
+              </ion-input>
+            </ion-item>
+            @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <ion-text color="danger" class="error-text">
+              <small>אימייל תקין נדרש</small>
+            </ion-text>
+            }
+          </div>
 
-          <ion-item>
-            <ion-label position="stacked">סיסמה</ion-label>
-            <ion-input type="password" formControlName="password" placeholder="הזן את הסיסמה שלך"> </ion-input>
-          </ion-item>
+          <!-- Password Input -->
+          <div class="form-group">
+            <ion-item>
+              <ion-label position="stacked">סיסמה</ion-label>
+              <ion-input 
+                type="password" 
+                formControlName="password" 
+                placeholder="הזן את הסיסמה שלך">
+              </ion-input>
+            </ion-item>
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <ion-text color="danger" class="error-text">
+              <small>סיסמה נדרשת</small>
+            </ion-text>
+            }
+          </div>
 
-          <div class="ion-margin-top">
-            <ion-button expand="block" type="submit" [disabled]="!loginForm.valid || loading()">
+          <!-- Submit Button -->
+          <div class="form-group submit-group">
+            <ion-button 
+              expand="block" 
+              type="submit" 
+              [disabled]="!loginForm.valid || loading()"
+              class="submit-button">
               @if (loading()) {
-              <ion-spinner></ion-spinner>
+              <ion-spinner slot="start"></ion-spinner>
+              <span>מתחברים...</span>
               } @else {
+              <ion-icon name="log-in" slot="start"></ion-icon>
               <span>התחבר</span>
               }
             </ion-button>
           </div>
 
+          <!-- Error Message -->
           @if (error()) {
-          <ion-text color="danger" (click)="clearError()">
-            <p class="ion-text-center">{{ error() }}</p>
-          </ion-text>
+          <div class="error-banner">
+            <ion-icon name="alert-circle"></ion-icon>
+            <ion-text color="danger">
+              <p>{{ error() }}</p>
+            </ion-text>
+            <ion-button fill="clear" size="small" (click)="clearError()">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </div>
           }
         </form>
-
-        <div class="ion-text-center ion-margin-top">
-          <ion-text>
-            <p>אין לך חשבון? <a routerLink="/auth/register">הירשם</a></p>
-          </ion-text>
-        </div>
       </ion-card-content>
     </ion-card>
+
+    <!-- Register Link -->
+    <div class="auth-footer">
+      <ion-text>
+        <p>אין לך חשבון? <a routerLink="/auth/register" class="link">הירשם עכשיו</a></p>
+      </ion-text>
+    </div>
   </div>
 </ion-content>

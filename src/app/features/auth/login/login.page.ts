@@ -9,45 +9,50 @@ import {
   IonToolbar,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonItem,
-  IonLabel,
   IonInput,
   IonButton,
   IonText,
   IonSpinner,
+  IonIcon,
+  IonItem,
+  IonLabel,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { logIn, alertCircle } from 'ionicons/icons';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
     IonCard,
     IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonItem,
-    IonLabel,
     IonInput,
     IonButton,
     IonText,
     IonSpinner,
-    ReactiveFormsModule,
-    RouterLink,
+    IonIcon,
+    IonItem,
+    IonLabel,
   ],
 })
 export class LoginPage {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+
+  constructor() {
+    addIcons({ logIn, alertCircle });
+  }
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -7,16 +7,9 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonItem,
-  IonLabel,
   IonButton,
   IonText,
   IonSpinner,
-  IonList,
   IonIcon,
   IonFab,
   IonFabButton,
@@ -26,34 +19,32 @@ import {
   IonBadge,
   IonSegment,
   IonSegmentButton,
+  IonLabel,
   AlertController,
   ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, checkmark, cart, create, trash, chevronBack } from 'ionicons/icons';
+import { add, checkmark, cart, create, trash, chevronBack, listSharp, cartSharp, checkmarkCircle, bagHandle, layersSharp, image, close } from 'ionicons/icons';
 import { ItemsStore } from '../../stores/items.store';
+import { ImageService } from '../../core/image.service';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-items',
   templateUrl: './items.page.html',
+  styleUrls: ['./items.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
     DatePipe,
+    FormsModule,
     IonContent,
     IonHeader,
     IonTitle,
     IonToolbar,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonItem,
-    IonLabel,
     IonButton,
     IonText,
     IonSpinner,
-    IonList,
     IonIcon,
     IonFab,
     IonFabButton,
@@ -63,7 +54,7 @@ import { ItemsStore } from '../../stores/items.store';
     IonBadge,
     IonSegment,
     IonSegmentButton,
-    FormsModule,
+    IonLabel,
   ],
 })
 export class ItemsPage implements OnInit {
@@ -72,9 +63,12 @@ export class ItemsPage implements OnInit {
   private route = inject(ActivatedRoute);
   private alertController = inject(AlertController);
   private toastController = inject(ToastController);
+  private imageService = inject(ImageService);
+  private authService = inject(AuthService);
 
   listId: string = '';
   currentView: string = 'all';
+  selectedImage: { base64: string; file: File } | null = null;
 
   items = this.itemsStore.items;
   loading = this.itemsStore.loading;
@@ -84,7 +78,7 @@ export class ItemsPage implements OnInit {
   cartItems = this.itemsStore.cartItems;
 
   constructor() {
-    addIcons({ add, checkmark, cart, create, trash, chevronBack });
+    addIcons({ add, checkmark, cart, create, trash, chevronBack, listSharp, cartSharp, checkmarkCircle, bagHandle, layersSharp, image, close });
   }
 
   ngOnInit() {
@@ -109,7 +103,48 @@ export class ItemsPage implements OnInit {
     }
   }
 
+  getEmptyStateIcon(): string {
+    switch (this.currentView) {
+      case 'unchecked':
+        return 'cart-outline';
+      case 'checked':
+        return 'checkmark-circle-outline';
+      case 'cart':
+        return 'bag-outline';
+      default:
+        return 'document-text-outline';
+    }
+  }
+
+  getEmptyStateTitle(): string {
+    switch (this.currentView) {
+      case 'unchecked':
+        return 'כל הפריטים בוצעו!';
+      case 'checked':
+        return 'אף פריט לא בוצע';
+      case 'cart':
+        return 'העגלה ריקה';
+      default:
+        return 'אין פריטים עדיין';
+    }
+  }
+
+  getEmptyStateMessage(): string {
+    switch (this.currentView) {
+      case 'unchecked':
+        return 'יפה! סיימתם עם כל הפריטים ברשימה.';
+      case 'checked':
+        return 'התחילו לקנות כדי לסמן פריטים כבוצעים.';
+      case 'cart':
+        return 'הוסיפו פריטים לעגלה כדי לראות אותם כאן.';
+      default:
+        return 'הוסיפו את הפריט הראשון שלכם כדי להתחיל.';
+    }
+  }
+
   async addItem() {
+    this.selectedImage = null;
+    
     const alert = await this.alertController.create({
       header: 'הוסף פריט',
       inputs: [
@@ -127,8 +162,18 @@ export class ItemsPage implements OnInit {
       ],
       buttons: [
         {
+          text: 'בחר תמונה',
+          handler: async () => {
+            await this.pickImage();
+            return false;
+          },
+        },
+        {
           text: 'ביטול',
           role: 'cancel',
+          handler: () => {
+            this.selectedImage = null;
+          },
         },
         {
           text: 'הוסף',
@@ -136,8 +181,33 @@ export class ItemsPage implements OnInit {
             if (data.itemName?.trim()) {
               try {
                 const qty = parseInt(data.quantity) || 1;
-                await this.itemsStore.addItem(data.itemName.trim(), qty, this.listId);
+                let imageUrl: string | undefined;
+
+                if (this.selectedImage?.file) {
+                  try {
+                    const user = this.authService.getUser();
+                    if (user) {
+                      // Use a consistent ID based on timestamp
+                      const tempId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                      const storagePath = `items/${user.uid}/${this.listId}/${tempId}`;
+                      imageUrl = await this.imageService.uploadImage(this.selectedImage.file, storagePath);
+                      console.log('Image uploaded successfully:', imageUrl);
+                    }
+                  } catch (imageError: any) {
+                    console.error('Image upload failed:', imageError);
+                    await this.showToast('שגיאה בהעלאת תמונה: ' + imageError.message, 'warning');
+                    // Continue without image
+                  }
+                }
+
+                await this.itemsStore.addItem(
+                  data.itemName.trim(),
+                  qty,
+                  this.listId,
+                  imageUrl
+                );
                 await this.showToast('פריט נוסף בהצלחה!');
+                this.selectedImage = null;
               } catch (error: any) {
                 await this.showToast(error.message, 'danger');
               }
@@ -150,7 +220,44 @@ export class ItemsPage implements OnInit {
     await alert.present();
   }
 
+  private async pickImage() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    
+    input.onchange = async (event: any) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        try {
+          // Validate file
+          if (!file.type.startsWith('image/')) {
+            throw new Error('בחר קובץ תמונה בלבד');
+          }
+          
+          if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            throw new Error('תמונה גדולה מדי (מקסימום 5MB)');
+          }
+          
+          console.log('Selected image:', { name: file.name, size: file.size, type: file.type });
+          const base64 = await this.imageService.fileToBase64(file);
+          this.selectedImage = { base64, file };
+          await this.showToast('תמונה נבחרה! (ללחיצה על הוספה, התמונה תיעלה)');
+          
+          // Re-open the alert after image selection
+          await this.addItem();
+        } catch (error: any) {
+          console.error('Image selection error:', error);
+          await this.showToast(error.message || 'שגיאה בטעינת התמונה', 'danger');
+        }
+      }
+    };
+    
+    input.click();
+  }
+
   async editItem(item: any) {
+    this.selectedImage = null;
+    
     const alert = await this.alertController.create({
       header: 'ערוך פריט',
       inputs: [
@@ -169,8 +276,18 @@ export class ItemsPage implements OnInit {
       ],
       buttons: [
         {
+          text: item.imageUrl ? 'שנה תמונה' : 'בחר תמונה',
+          handler: async () => {
+            await this.pickImageForEdit();
+            return false;
+          },
+        },
+        {
           text: 'ביטול',
           role: 'cancel',
+          handler: () => {
+            this.selectedImage = null;
+          },
         },
         {
           text: 'עדכן',
@@ -178,11 +295,32 @@ export class ItemsPage implements OnInit {
             if (data.itemName?.trim()) {
               try {
                 const qty = parseInt(data.quantity) || 1;
-                await this.itemsStore.updateItem(item.id, {
+                const updateData: any = {
                   name: data.itemName.trim(),
                   qty,
-                });
+                };
+
+                if (this.selectedImage?.file) {
+                  try {
+                    const user = this.authService.getUser();
+                    if (user) {
+                      const storagePath = `items/${user.uid}/${this.listId}/${item.id}`;
+                      updateData.imageUrl = await this.imageService.uploadImage(
+                        this.selectedImage.file,
+                        storagePath
+                      );
+                      console.log('Image updated successfully:', updateData.imageUrl);
+                    }
+                  } catch (imageError: any) {
+                    console.error('Image upload failed:', imageError);
+                    await this.showToast('שגיאה בהעלאת תמונה: ' + imageError.message, 'warning');
+                    // Continue without updating image
+                  }
+                }
+
+                await this.itemsStore.updateItem(item.id, updateData);
                 await this.showToast('פריט עודכן בהצלחה!');
+                this.selectedImage = null;
               } catch (error: any) {
                 await this.showToast(error.message, 'danger');
               }
@@ -193,6 +331,38 @@ export class ItemsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  private async pickImageForEdit() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    
+    input.onchange = async (event: any) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        try {
+          // Validate file
+          if (!file.type.startsWith('image/')) {
+            throw new Error('בחר קובץ תמונה בלבד');
+          }
+          
+          if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            throw new Error('תמונה גדולה מדי (מקסימום 5MB)');
+          }
+          
+          console.log('Selected image for edit:', { name: file.name, size: file.size, type: file.type });
+          const base64 = await this.imageService.fileToBase64(file);
+          this.selectedImage = { base64, file };
+          await this.showToast('תמונה נבחרה! (ללחיצה על עדכון, התמונה תיעלה)');
+        } catch (error: any) {
+          console.error('Image selection error:', error);
+          await this.showToast(error.message || 'שגיאה בטעינת התמונה', 'danger');
+        }
+      }
+    };
+    
+    input.click();
   }
 
   async deleteItem(itemId: string, itemName: string, event: Event) {
@@ -239,6 +409,15 @@ export class ItemsPage implements OnInit {
     }
   }
 
+  onImageError(event: any, itemId: string) {
+    console.error('Image failed to load for item:', itemId);
+    console.error('Image URL was:', event.target.src);
+  }
+
+  clearError() {
+    this.itemsStore.clearError();
+  }
+
   goBackToLists() {
     this.router.navigate(['/lists']);
   }
@@ -256,3 +435,4 @@ export class ItemsPage implements OnInit {
     await toast.present();
   }
 }
+

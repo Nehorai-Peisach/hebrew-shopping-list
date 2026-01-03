@@ -47,17 +47,19 @@ export const ItemsStore = signalStore(
       )
     ),
 
-    async addItem(name: string, qty: number, listId: string): Promise<string> {
+    async addItem(name: string, qty: number, listId: string, imageUrl?: string): Promise<string> {
       const user = authService.getUser();
       if (!user) throw new Error('User not authenticated');
 
       try {
         patchState(store, { loading: true, error: null });
+        
         const itemId = await firestoreService.createItem({
           name,
           qty,
           listId,
           createdBy: user.uid,
+          imageUrl,
         });
         patchState(store, { loading: false });
         return itemId;
